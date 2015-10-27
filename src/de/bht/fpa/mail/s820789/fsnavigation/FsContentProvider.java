@@ -19,35 +19,29 @@ public class FsContentProvider implements ITreeContentProvider {
 
   @Override
   public Object[] getElements(Object inputElement) {
-    if(inputElement instanceof String) {
-      String s = (String)inputElement;
-      return new String[] { s + "-Child1", s + "-Child2" };
-    }
-    return null;
+    return getChildren(inputElement);
   }
 
   @Override
   public Object[] getChildren(Object parentElement) {
-    // wenn man Verzeichnis aufklappt wird diese Methode gerufen, Elemente unterhalb eines Knotens
+    // wenn man Verzeichnis aufklappt wird diese Methode gerufen, Elemente
+    // unterhalb eines Knotens
     // statt String IMessageTreeItem
-    if(parentElement instanceof String) {
-      String s = (String)parentElement;
-      return new String[] { s + "-Child1", s + "-Child2", s + "-Child3" };
-    }
-    return null;
-   
+    return ((FileTreeItem) parentElement).getChildren().toArray();
+
   }
 
   @Override
   public Object getParent(Object element) {
-    // Vaterknoten von einem Element zu bekommen, wird ignoriert brauchen wir nicht
+    // Vaterknoten von einem Element zu bekommen, wird ignoriert brauchen wir
+    // nicht
     return null;
   }
 
   @Override
   public boolean hasChildren(Object element) {
     // hat ein Knoten Kinder? True bedeutet, + zum Aufklappen
-    return true;
+    return ((FileTreeItem) element).hasChildren();
   }
 
 }
