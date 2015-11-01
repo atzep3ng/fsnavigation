@@ -13,36 +13,36 @@ import org.eclipse.swt.widgets.Shell;
 import org.osgi.service.prefs.BackingStoreException;
 import org.osgi.service.prefs.Preferences;
 
-public class HistoryDialog extends Dialog {
+public class HistoryDialogue extends Dialog {
 
   private int index = -1;
 
-  protected HistoryDialog(Shell parentShell) {
+  protected HistoryDialogue(Shell parentShell) {
     super(parentShell);
   }
 
   @Override
   protected Control createDialogArea(Composite parent) {
 
-    final int width = 100;
-    final int height = 100;
+    final int windowWidth = 200;
+    final int windowHeight = 200;
 
     Composite composite = (Composite) super.createDialogArea(parent);
     composite.getShell().setText("A dialog box with no buttons at all press 'ESC' to close");
-    Composite com = new Composite(composite, SWT.SCROLLBAR_OVERLAY);
-    ListViewer ls = new ListViewer(com, SWT.V_SCROLL);
+    Composite compo = new Composite(composite, SWT.SCROLLBAR_OVERLAY);
+    ListViewer listViewer = new ListViewer(compo, SWT.V_SCROLL);
     System.out.println(parent.getSize());
-    ls.getList().setSize(width, height);
+    listViewer.getList().setSize(windowWidth, windowHeight);
 
     for (String s : getEntries()) {
-      ls.add(s);
+      listViewer.add(s);
     }
 
-    if (ls.getList().getItemCount() == 0) {
-      ls.add("No base directories in history");
-      ls.getList().setEnabled(false);
+    if (listViewer.getList().getItemCount() == 0) {
+      listViewer.add("No base directories in history");
+      listViewer.getList().setEnabled(false);
     }
-    ls.addSelectionChangedListener(e -> index = ls.getList().getItemCount() - ls.getList().getSelectionIndex() - 1);
+    listViewer.addSelectionChangedListener(e -> index = listViewer.getList().getItemCount() - listViewer.getList().getSelectionIndex() - 1);
 
     return super.createDialogArea(parent);
   }
@@ -55,12 +55,12 @@ public class HistoryDialog extends Dialog {
 
   private List<String> getEntries() {
 
-    Preferences prefs = SetBaseDirHandler.getPrefs();
+    Preferences preferences = SetBaseDirHandler.getPrefs();
     List<String> choices = new ArrayList<>();
     try {
 
-      for (String k : prefs.keys()) {
-        choices.add(prefs.get(k, ""));
+      for (String k : preferences.keys()) {
+        choices.add(preferences.get(k, ""));
       }
       Collections.reverse(choices);
     } catch (BackingStoreException e) {

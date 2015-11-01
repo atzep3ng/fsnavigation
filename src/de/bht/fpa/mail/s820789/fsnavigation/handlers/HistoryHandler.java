@@ -9,22 +9,22 @@ import org.eclipse.ui.handlers.HandlerUtil;
 /**
  * 
  */
-public class SetHistoryDirHandler extends AbstractHandler {
+public class HistoryHandler extends AbstractHandler {
   /**
    * The constructor.
    */
-  public SetHistoryDirHandler() {
+  public HistoryHandler() {
   }
 
   /**
-   *
+   *initialize history window
    */
   public Object execute(ExecutionEvent event) throws ExecutionException {
-    IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
-    HistoryDialog hd = new HistoryDialog(window.getShell());
+    IWorkbenchWindow historyWindow = HandlerUtil.getActiveWorkbenchWindowChecked(event);
+    HistoryDialogue historyDialogue = new HistoryDialogue(historyWindow.getShell());
     FileObservable file = FileObservable.getInstance();
 
-    int i = hd.open();
+    int i = historyDialogue.open();
 
     if (i > -1) {
       file.setPath(SetBaseDirHandler.getPrefs().get(i + "", System.getProperty("user.home")));
