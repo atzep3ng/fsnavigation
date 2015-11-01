@@ -24,19 +24,26 @@ public class FolderItem extends FileTreeItem {
 
   @Override
   public boolean hasChildren() {
-    // TODO Auto-generated method stub
-    return file.list() != null;
+    if (file.list() == null) {
+      return false;
+    }
+    for (File file : file.listFiles()) {
+      if (file.isDirectory()) {
+        return true;
+      }
+    }
+    return false;
   }
-
+  
+  
   @Override
   public List<IMessageTreeItem> getChildren() {
+
     ArrayList<IMessageTreeItem> children = new ArrayList<>();
 
     for (File item : file.listFiles()) {
       if (item.isDirectory()) {
         children.add(new FolderItem(item));
-      } else {
-        children.add(new FileItem(item));
       }
     }
 
@@ -44,14 +51,19 @@ public class FolderItem extends FileTreeItem {
   }
 
   public List<Message> getMessages() {
-    File f = new File("");
 
-    try {
-      Message msg = JAXB.unmarshal(f, Message.class);
-//      msg.getId();
-    } catch (Exception ex) {
-        // Exception verschlucken
+    List<Message> msgs = new ArrayList<Message>();
+
+    for (File item : file.listFiles()) {
+      try {
+        Message msg = JAXB.unmarshal(item, Message.class);
+        if (msg.getId() != null) {
+          msgs.add(msg);
+        }
+      } catch (Exception e) {
+      } // Ex. verschlucken!
     }
-    return null;
+    return msgs;
   }
+  
 }
